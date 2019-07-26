@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>品牌管理</title>
+  <link rel="stylesheet" href="./lib/bootstrap.css">
+  <script src="./lib/vue-2.5.16.js"></script>
+</head>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script>
+/**/
+//dsdasd
+
+  $(function () {
+
+      //页面加载完毕之后发送ajax查询所有
+      $.ajax({
+
+        url:"brand/findAll",
+
+        type:'get',
+
+        data:{
+
+        },
+
+        //设置返回值类型为json类型
+        contentType: "application/json",
+
+        statusCode:{
+
+          200:function (rel) {
+
+            //把tbody里面的内容删除
+            $("tbody[id='s01']").html("")
+
+            $(rel).each(function (index, ele) {
+
+              $("tbody[id='s01']").append(" <tr>\n" +
+                      "          <td>"+ele.bid+"</td>\n" +
+                      "          <td>"+ele.bname+"</td>\n" +
+                      "          <td>"+ele.addtime+"</td>\n" +
+                      "          <td>\n" +
+                      "            <a href='#' onclick='deletes("+ele.bid+")' >删除</a>\n" +
+                      "          </td>\n" +
+                      "        </tr>")
+
+
+            })
+
+          },
+          500:function () {
+            alert("查询列表失败!")
+
+
+          }
+
+        }
+
+      })
+  })
+
+  //删除操作
+  function deletes(rel) {
+
+    $.ajax({
+
+      url:"brand/delete/"+rel,
+
+      type:"get",
+
+      statusCode:{
+        204:function () {
+
+          alert("删除成功!")
+          window.location.reload("brandlist.html");
+
+        },
+        500:function () {
+          alert("删除失败!")
+
+        }
+
+      }
+
+
+    })
+
+  }
+
+  // 自定义jquery的方法，将Form表单中的内容转换成json
+  $.fn.serializeJson=function(){
+    var serializeObj={};
+    var array=this.serializeArray();
+    var str=this.serialize();
+    $(array).each(function(){
+      if(serializeObj[this.name]){
+        if($.isArray(serializeObj[this.name])){
+          serializeObj[this.name].push(this.value);
+        }else{
+          serializeObj[this.name]=[serializeObj[this.name],this.value];
+        }
+      }else{
+        serializeObj[this.name]=this.value;
+      }
+    });
+    return serializeObj;
+  };
+
+  //添加操作
+  function adds() {
+
+    $.ajax({
+
+      url:"brand/add",
+
+      data:$("form[id='myform01']").serializeJson(),
+
+      type:"post",
+
+      statusCode:{
+
+        201:function () {
+          alert("添加成功！")
+          window.location.reload("brandlist.html");
+
+        },
+        500:function () {
+          alert("添加错误!")
+
+        }
+      }
+
+
+
+    })
+
+  }
+
+
+</script>
+<body>
+  <div id="app">
+
+    <!-- panel 面板 -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">添加品牌</h3>
+      </div>
+      <div class="panel-body">
+        <form id="myform01">
+
+        <div class="form-group form-inline">
+
+          <div class="input-group">
+            <div class="input-group-addon">编号</div>
+            <input type="text" name="bid" class="form-control" v-model="id">
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-addon">品牌名称</div>
+            <input type="text" name="bname" class="form-control" v-model="name" @keyup.enter="add">
+          </div>
+
+          <div class="input-group">
+            <button type="button" class="btn btn-primary" onclick="adds()">添加</button>
+          </div>
+     <input type="r">
+        </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 表格区域 -->
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+          <th>编号</th>
+          <th>品牌名称</th>
+          <th>添加时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+
+      <tbody id="s01">
+        <tr>
+          <td>1</td>
+          <td>宝马</td>
+          <td>2018.1.1</td>
+          <td>
+            <a href="#" >删除</a>
+          </td>
+        </tr>
+		<tr>
+          <td>2</td>
+          <td>奔驰</td>
+          <td>2019.2.2</td>
+          <td>
+            <a href="#" >删除</a>
+          </td>
+        </tr>
+		<tr>
+          <td>3</td>
+          <td>奥迪</td>
+          <td>2017.10.11</td>
+          <td>
+            <a href="#" >删除</a>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+
+
+  </div>
+
+</body>
+
+</html>
