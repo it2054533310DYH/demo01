@@ -15,7 +15,7 @@ public interface BrandService {
     public List<Brand> findList();
 
     void delete(String id);
-    void delete(String pdsadsaddsd);
+
 
     void add(Brand brand);
 }

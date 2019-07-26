@@ -25,7 +25,7 @@ public class UserServicelmpl implements UserService {
     public User getLogin(User user) {
 
         List<User> list = userMapper.selectAll();
-
+        System.out.println(list);
         for (User user1 : list) {
             if (user1.getUserName().equals(user.getUserName())&&user1.getPassword().equals(user.getPassword())){
                 return user1;
